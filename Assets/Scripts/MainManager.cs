@@ -12,7 +12,8 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
-    
+    public Text reTextName;
+
     private bool m_Started = false;
     private int m_Points;
     
@@ -22,6 +23,8 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //reTextName.text = "Best Score: " + MenuHandler.Instance.namePlayer + ": 0";
+        DisplayNameAndScore(MenuHandler.Instance.namePlayer);
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -36,6 +39,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+    }
+
+    public void DisplayNameAndScore(string name) {
+        reTextName.text = "Best Score: " + name + ": " + MenuHandler.Instance.score;
     }
 
     private void Update()
@@ -72,5 +79,21 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        Debug.Log("MenuHandler.Instance.score: " + MenuHandler.Instance.score);
+        Debug.Log("MenuHandler.Instance.namePlayer: " + MenuHandler.Instance.namePlayer);
+        if (MenuHandler.Instance.score == null || MenuHandler.Instance.score == "") {
+            MenuHandler.Instance.namePlayer = MenuHandler.Instance.nameEntered;
+            MenuHandler.Instance.score = m_Points.ToString();
+            MenuHandler.Instance.SaveName();
+            DisplayNameAndScore(MenuHandler.Instance.namePlayer);
+        } else if (m_Points > int.Parse(MenuHandler.Instance.score)) {
+            Debug.Log("entro aqui");
+            MenuHandler.Instance.namePlayer = MenuHandler.Instance.nameEntered;
+            MenuHandler.Instance.score = m_Points.ToString();
+            MenuHandler.Instance.SaveName();
+            DisplayNameAndScore(MenuHandler.Instance.namePlayer);
+        }
+
+        
     }
 }
